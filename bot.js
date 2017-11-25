@@ -37,12 +37,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 	 * Takes command input after !
 	 * Removes any special cases from the message
 	 */
-	if (message.substring(0, 1) == '!') {
-		message = message.replace(/[^\w\s!]/gi, '')
-		var args = message.substring(1).split(' ');
-		var cmd = args[0];
-		args = args.splice(1);
-		if(userHasPermission(user)) {
+	if(userHasPermission(user)) {
+		if (message.substring(0, 1) == '!') {
+			message = message.replace(/[^\w\s!]/gi, '')
+			var args = message.substring(1).split(' ');
+			var cmd = args[0];
+			args = args.splice(1);
 			switch(cmd) {
 				case 'help':
 					help = getHelp();
@@ -107,12 +107,47 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 						message: permissionslistToString()
 					})
 					break;
+				default:
+					sanitizeMessage(evt, channelID, message);
+					break;
 			}
 		} else {
-			//TODO: message sanitizing goes here
+			sanitizeMessage(evt, channelID, message);
 		}
+	} else {
+		sanitizeMessage(evt, channelID, message);
 	}
 });
+
+function sanitizeMessage(evt, channelID, message) {
+	var test = JSON.stringify(evt.d);
+	test = JSON.parse(test);
+	banlist = getBanlist();
+	var deleteMsg = false;
+
+	if(message.indexOf("https://") !== -1 || message.indexOf("http://") !== -1) {
+		for(i = 0; i < banlist["link"].length; i++) {
+			if(message.indexOf(banlist["link"][i])) {
+				deleteMsg = true;
+			}
+		}
+	}
+	for(i = 0; i < banlist["file"].length; i++) {
+		for(j = 0; j < test.attachments.length; j++) {
+			var attachmentFile = test.attachments[j]["filename"];
+			if(attachmentFile.indexOf(banlist["file"][i]) !== -1) {
+				deleteMsg = true;
+			}
+		}
+	}
+	if(deleteMsg) {
+		logger.info('true');
+		bot.deleteMessage({
+			channelID: channelID,
+			messageID: evt.d.id
+		});
+	}
+}
 
 /*
  * Checks if permissions list contains user
@@ -124,6 +159,11 @@ function userHasPermission(user) {
 	list = getPermissionsList();
 	for(i = 0; i < list["users"].length; i++) {
 		if(list["users"][i] === user) {
+			hasPermission = true;
+		}
+	}
+	for(i = 0; i < list["super"].length; i++) {
+		if(list["super"][i] === user) {
 			hasPermission = true;
 		}
 	}
