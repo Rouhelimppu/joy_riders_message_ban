@@ -182,8 +182,8 @@ function setBanlist(args, identifier = '') {
 			banList["word"].push(args[i]);
 		}
 	} else {
-		for(i = 0; i < args.length; i++) {
-			banList[identifier].push(args[i + 1]);
+		for(i = 1; i < args.length; i++) {
+			banList[identifier].push(args[i]);
 		}
 	}
 	saveBanlist(banList);
@@ -343,6 +343,7 @@ function getHelp() {
 		'!add <username> adds user to permissions list. Users in that list may use bot commands. Case sensitive',
 		'!remove <index> removes user from permissions list',
 		'!permissions displays permissions list',
+		"This bot doesn't sanitize only messages just yet",
 		'```'
 	)
 	return help;
