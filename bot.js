@@ -119,6 +119,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 	}
 });
 
+/*
+ * Deletes message as defined in banlist
+ * Object evt - message event object
+ * String channelID - ID of a channel where the message was sent
+ * String message - written message
+ */
 function sanitizeMessage(evt, channelID, message) {
 	var test = JSON.stringify(evt.d);
 	test = JSON.parse(test);
