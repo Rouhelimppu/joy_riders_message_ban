@@ -1,0 +1,13 @@
+{
+  "name": "HashtagChatFilter",
+  "version": "1.0.0",
+  "description": "Text sanitizer bot",
+  "main": "bot.js",
+  "author": "Ojala Nico",
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "discord.js": "^11.2.1",
+    "jsonfile": "^4.0.0",
+    "winston": "^2.4.0"
+  }
+}
