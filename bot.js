@@ -133,7 +133,7 @@ function sanitizeMessage(evt, channelID, message) {
 
 	if(message.indexOf("https://") !== -1 || message.indexOf("http://") !== -1) {
 		for(i = 0; i < banlist["link"].length; i++) {
-			if(message.indexOf(banlist["link"][i])) {
+			if(message.indexOf(banlist["link"][i]) !== -1) {
 				deleteMsg = true;
 			}
 		}
