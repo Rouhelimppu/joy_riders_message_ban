@@ -1,5 +1,4 @@
 var Discord = require('discord.io');
-var Discordjs = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
 var jsonfile = require('jsonfile');
